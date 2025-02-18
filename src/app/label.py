@@ -194,7 +194,9 @@ class Label:
         #self.label.text((0, 0), self.data['qr_text'], 0)
 
     def text(self):
-        x, y = self.label.multiline_textsize(self.data['text'], font=self.font, spacing=self.data['font_spacing'])
+        left, top, right, bottom = self.label.textbbox(xy=(0, 0), text=self.data['text'], font=self.font, spacing=self.data['font_spacing'])
+        x = right - left
+        y = bottom - top
 
         # resize label
         if self.height == 0:
