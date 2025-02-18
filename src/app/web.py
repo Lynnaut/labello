@@ -1,7 +1,7 @@
 import logging
 from . import app, label
 from flask import render_template, send_file, request, jsonify, send_from_directory
-from brother_ql.devicedependent import label_type_specs
+from brother_ql.labels import ALL_LABELS
 
 
 logger = logging.getLogger(__name__)
@@ -13,7 +13,7 @@ def root():
                            fonts=app.config['fonts'],
                            margins=app.config['margins'],
                            spacing=app.config['font_spacing'],
-                           labels=label_type_specs)
+                           labels=ALL_LABELS)
 
 
 @app.errorhandler(404)

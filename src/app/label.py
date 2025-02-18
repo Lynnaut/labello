@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
-from brother_ql.devicedependent import label_type_specs, ENDLESS_LABEL, cuttingsupport, min_max_length_dots
-from brother_ql import BrotherQLRaster, create_label
+from brother_ql.labels import LabelsManager, FormFactor
+from brother_ql import BrotherQLRaster
+from brother_ql.brother_ql_create import create_label
 from brother_ql.backends import backend_factory
 from io import BytesIO
 import base64
@@ -13,11 +14,11 @@ from pprint import pprint
 class Label:
     def __init__(self, data, file=False):
         """ creates a new label with the given settings """
-        lts = label_type_specs
+        lts = LabelsManager()
         self.size = data['label_size']
-        logger.debug('Label size: {}'.format(lts[self.size]['dots_printable']))
-        self.width, self.height = lts[self.size]['dots_printable']
-        if data['orientation'] == 'rotated':
+        logger.debug('Label size: {}'.format(lts[self.size].dots_printable))
+        self.width, self.height = lts[self.size].dots_printable
+        if data['orientation'] != 'rotated':
             self.rotated = True
         else:
             self.rotated = False
@@ -203,7 +204,7 @@ class Label:
             else:
                 self.height = y + self.data['margin_top'] + self.data['margin_bottom']
         elif self.rotated:
-            self.height, self.width = label_type_specs[self.size]['dots_printable']
+            self.height, self.width = LabelsManager()[self.size].dots_printable
         self.image = Image.new('L', (self.width, self.height), 255)
         self.label = ImageDraw.Draw(self.image)
 
@@ -229,17 +230,17 @@ class Label:
         return self.convert_to_png()
 
     def prt(self):
-        print(label_type_specs[self.size])
-        if label_type_specs[self.size]['kind'] == ENDLESS_LABEL:
+        print(LabelsManager()[self.size])
+        if LabelsManager()[self.size].form_factor == FormFactor.ENDLESS:
             rot = 0 if not self.rotated else 90
         else:
             rot = 'auto'
 
-        if label_type_specs[self.size]['kind'] != 2:
-            label_type_specs[self.size]['feed_margin'] = config['label']['feed_margin']
+        # if LabelsManager()[self.size].form_factor != FormFactor.ENDLESS:
+        #     LabelsManager()[self.size].feed_margin = config['label']['feed_margin']
 
         qlr = BrotherQLRaster(config['printer']['model'])
-        if config['printer']['model'] in cuttingsupport:
+        if qlr.model.cutting:
             logger.debug('Printer is capable of automatic cutting.')
             cutting = True
         else:

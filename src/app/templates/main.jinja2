@@ -41,10 +41,10 @@
                         Label size:
                         <select name="label_size" class="form-control mb-2" id="label_size">
                             {% for label in labels %}
-                                {% if label == "62" %}
-                                    <option value="{{ label }}" selected>{{ labels[label]['name'] }}</option>
+                                {% if label.identifier == "62" %}
+                                    <option value="{{ label.identifier }}" selected>{{ label.name }}</option>
                                 {% else %}
-                                    <option value="{{ label }}">{{ labels[label]['name'] }}</option>
+                                    <option value="{{ label.identifier }}">{{ label.name }}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
