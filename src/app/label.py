@@ -110,6 +110,7 @@ class Label:
         logger.debug('Image: {}'.format(img))
         logger.debug('Image size: {}'.format(img.size))
         imgsize = self.scale(img.size)
+        imgwidth, imgheight = imgsize
         logger.debug('Scaled image size: {}'.format(imgsize))
         logger.debug('Label preset size: {}, {}'.format(self.width, self.height))
 
@@ -117,11 +118,11 @@ class Label:
         rot_img = False
         if self.height == 0:
             if not self.rotated:
-                x = imgsize[0]
+                x = imgwidth
                 y = self.width
             else:
-                x = self.width
-                y = imgsize[0]
+                x = imgheight
+                y = self.width
         else:
             if not self.rotated:
                 x = self.height
