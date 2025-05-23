@@ -26,20 +26,20 @@ class Label:
         self.data = data
         try:
             self.data['margin_left'] = int(self.data['margin_left'])
-        except ValueError:
-            self.data['margin_left'] = config['labels']['margin']['left']
+        except (KeyError, ValueError):
+            self.data['margin_left'] = config['label']['margins']['left']
         try:
             self.data['margin_right'] = int(self.data['margin_right'])
-        except ValueError:
-            self.data['margin_right'] = config['labels']['margin']['right']
+        except (KeyError, ValueError):
+            self.data['margin_right'] = config['label']['margins']['right']
         try:
             self.data['margin_top'] = int(self.data['margin_top'])
-        except ValueError:
-            self.data['margin_top'] = config['labels']['margin']['top']
+        except (KeyError, ValueError):
+            self.data['margin_top'] = config['label']['margins']['top']
         try:
             self.data['margin_bottom'] = int(self.data['margin_bottom'])
-        except ValueError:
-            self.data['margin_bottom'] = config['labels']['margin']['bottom']
+        except (KeyError, ValueError):
+            self.data['margin_bottom'] = config['label']['margins']['bottom']
         logger.debug('margin_left: {}'.format(self.data["margin_left"]))
         logger.debug('margin_right: {}'.format(self.data["margin_right"]))
         logger.debug('margin_top: {}'.format(self.data["margin_top"]))
@@ -116,14 +116,12 @@ class Label:
         # resize label
         rot_img = False
         if self.height == 0:
-            x = imgsize[0]
-            y = imgsize[1]
-            #if not self.rotated:
-            #    x = imgsize[0]
-            #    y = imgsize[1]
-            #else:
-            #    x = imgsize[1]
-            #    y = imgsize[0]
+            if not self.rotated:
+                x = imgsize[0]
+                y = self.width
+            else:
+                x = self.width
+                y = imgsize[0]
         else:
             if not self.rotated:
                 x = self.height
