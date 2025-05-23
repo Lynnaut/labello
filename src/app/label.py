@@ -24,10 +24,6 @@ class Label:
             self.rotated = False
 
         self.data = data
-        logger.debug('margin_left: {}'.format(self.data["margin_left"]))
-        logger.debug('margin_right: {}'.format(self.data["margin_right"]))
-        logger.debug('margin_top: {}'.format(self.data["margin_top"]))
-        logger.debug('margin_bottom: {}'.format(self.data["margin_bottom"]))
         try:
             self.data['margin_left'] = int(self.data['margin_left'])
         except ValueError:
@@ -44,6 +40,10 @@ class Label:
             self.data['margin_bottom'] = int(self.data['margin_bottom'])
         except ValueError:
             self.data['margin_bottom'] = config['labels']['margin']['bottom']
+        logger.debug('margin_left: {}'.format(self.data["margin_left"]))
+        logger.debug('margin_right: {}'.format(self.data["margin_right"]))
+        logger.debug('margin_top: {}'.format(self.data["margin_top"]))
+        logger.debug('margin_bottom: {}'.format(self.data["margin_bottom"]))
 
         self.image = Image.new('L', (self.width, self.height), 255)
         self.label = ImageDraw.Draw(self.image)

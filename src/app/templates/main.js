@@ -185,10 +185,6 @@ function get_data_image() {
     fd.append('file', files);
     fd.append('label_size', label_size);
     fd.append('orientation', orientation);
-    fd.append('margin_top', 0);
-    fd.append('margin_bottom', 0);
-    fd.append('margin_right', 24);
-    fd.append('margin_left', 24);
 
     return fd;
 }
