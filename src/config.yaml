@@ -4,7 +4,7 @@ server:
   host: "0.0.0.0"
 
 logging:
-  level: 30 # 10=debug, 20=info, 30=warning, 40=error, 50=critical
+  level: 10 # 10=debug, 20=info, 30=warning, 40=error, 50=critical
 
 website:
   html_title: "labello - label printer"
@@ -22,9 +22,8 @@ label:
   font_spacing: 13
 
 printer:
-  device: "/dev/usb/lp0"
-  model: "QL-500"
+  device: "tcp://192.168.178.120"
+  model: "QL-820NWB"
 
 fonts:
-  - /opt/labello/download_font
-  - /opt/labello/fonts
+  - /Users/lschlehlein/Library/Fonts/

@@ -97,7 +97,7 @@ class Label:
                 x = img_width
                 y = img_height
 
-        ret = (int(x), int(y))
+        ret = (int(y), int(x))
 
         logger.debug('Scaled image: {}'.format(ret))
 
@@ -111,18 +111,21 @@ class Label:
         logger.debug('Image size: {}'.format(img.size))
         imgsize = self.scale(img.size)
         logger.debug('Scaled image size: {}'.format(imgsize))
+        logger.debug('Label preset size: {}, {}'.format(self.width, self.height))
 
         # resize label
         rot_img = False
         if self.height == 0:
-            if self.rotated:
-                x = self.width
-                y = imgsize[0]
-            else:
-                y = imgsize[0]
-                x = self.width
+            x = imgsize[0]
+            y = imgsize[1]
+            #if not self.rotated:
+            #    x = imgsize[0]
+            #    y = imgsize[1]
+            #else:
+            #    x = imgsize[1]
+            #    y = imgsize[0]
         else:
-            if self.rotated:
+            if not self.rotated:
                 x = self.height
                 y = self.width
             else:
@@ -136,7 +139,8 @@ class Label:
 
         self.label = ImageDraw.Draw(self.image)
 
-        img = halftone(img.resize(imgsize), 8, 1, 45)
+        #img = halftone(img.resize(imgsize), 8, 1, 45)
+        img = img.resize(imgsize)
         self.image.paste(img, (0, 0))
 
     def qr(self):
@@ -164,14 +168,14 @@ class Label:
 
         # resize label
         if self.height == 0:
-            if self.rotated:
+            if not self.rotated:
                 x = self.width
                 y = qrsize[0]
             else:
                 y = qrsize[0]
                 x = self.width
         else:
-            if self.rotated:
+            if not self.rotated:
                 x = self.height
                 y = self.width
             else:
@@ -200,12 +204,12 @@ class Label:
 
         # resize label
         if self.height == 0:
-            if self.rotated:
+            if not self.rotated:
                 self.height = self.width
                 self.width = x + self.data['margin_left'] + self.data['margin_right']
             else:
                 self.height = y + self.data['margin_top'] + self.data['margin_bottom']
-        elif self.rotated:
+        elif not self.rotated:
             self.height, self.width = LabelsManager()[self.size].dots_printable
         self.image = Image.new('L', (self.width, self.height), 255)
         self.label = ImageDraw.Draw(self.image)
@@ -234,7 +238,7 @@ class Label:
     def prt(self):
         print(LabelsManager()[self.size])
         if LabelsManager()[self.size].form_factor == FormFactor.ENDLESS:
-            rot = 0 if not self.rotated else 90
+            rot = 0 if self.rotated else 90
         else:
             rot = 'auto'
 
