@@ -14,10 +14,9 @@ from pprint import pprint
 class Label:
     def __init__(self, data, file=False):
         """ creates a new label with the given settings """
-        lts = LabelsManager()
         self.size = data['label_size']
-        logger.debug('Label size: {}'.format(lts[self.size].dots_printable))
-        self.width, self.height = lts[self.size].dots_printable
+        logger.debug('Label size: {}'.format(LabelsManager()[self.size].dots_printable))
+        self.width, self.height = LabelsManager()[self.size].dots_printable
         if data['orientation'] != 'rotated':
             self.rotated = True
         else:
@@ -140,6 +139,8 @@ class Label:
 
         #img = halftone(img.resize(imgsize), 8, 1, 45)
         img = img.resize(imgsize)
+        if self.rotated:
+            img = img.rotate(angle=90, expand=True)
         self.image.paste(img, (0, 0))
 
     def qr(self):
@@ -241,8 +242,8 @@ class Label:
         else:
             rot = 'auto'
 
-        # if LabelsManager()[self.size].form_factor != FormFactor.ENDLESS:
-        #     LabelsManager()[self.size].feed_margin = config['label']['feed_margin']
+        if LabelsManager()[self.size].form_factor != FormFactor.ENDLESS:
+            LabelsManager()[self.size].feed_margin = config['label']['feed_margin']
 
         qlr = BrotherQLRaster(config['printer']['model'])
         if qlr.model.cutting:
